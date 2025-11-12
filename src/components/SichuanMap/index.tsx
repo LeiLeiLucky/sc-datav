@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
+  Billboard,
   Extrude,
   Grid,
   Line,
@@ -12,6 +13,7 @@ import { Text } from "@react-three/drei";
 import { folder, useControls } from "leva";
 import * as THREE from "three";
 import * as d3 from "d3-geo";
+import gsap from "gsap";
 import OutLine from "./outline";
 import FlyLine from "./flyLine";
 import type { CityGeoJSON } from "../map";
@@ -41,8 +43,24 @@ function SichuanMap3D() {
       .translate([0, 0]);
   }, []);
 
+  const mapRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      gsap.to(mapRef.current.scale, {
+        duration: 3,
+        x: 1,
+        y: 1,
+        z: 1,
+        ease: "sine.inOut",
+      });
+    }
+  }, []);
+
   return (
     <group
+      ref={mapRef}
+      scale={0.5}
       position={[0, 0.25, -1.5]}
       rotation={[Math.PI / 2, 0, Math.PI * 1.5]}>
       <group renderOrder={0} position={[0, 0, -0.01]}>
@@ -102,14 +120,13 @@ function SichuanMap3D() {
             projection(item.properties.centroid ?? item.properties.center) ??
             [];
           return (
-            <Text
-              key={"city_" + index}
-              color="#ffffff"
-              fontSize={0.2}
+            <Billboard
               rotation={[Math.PI, 0, 0]}
-              position={[x ?? 0, y ?? 0, 0]}>
-              {item.properties.name}
-            </Text>
+              position={[x ?? 0, y ?? 0, -0.1]}>
+              <Text key={"city_" + index} color="#ffffff" fontSize={0.2}>
+                {item.properties.name}
+              </Text>
+            </Billboard>
           );
         })}
       </group>
