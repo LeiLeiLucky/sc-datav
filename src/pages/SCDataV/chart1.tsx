@@ -60,8 +60,16 @@ export default function Chart1() {
         ],
         tooltip: {
           trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+          },
+          textStyle: {
+            color: "#fff",
+          },
           backgroundColor: "rgba(110,145,140,0.3)",
           borderColor: colors[1],
+          borderWidth: 1,
+          borderRadius: 8,
         },
         xAxis: [
           {
