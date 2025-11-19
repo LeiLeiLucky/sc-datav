@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
-import * as d3 from "d3-geo";
+import { geoMercator } from "d3-geo";
 import { gsap } from "gsap";
 import type { CityGeoJSON } from "@/pages/SCDataV/map";
 
@@ -15,8 +15,7 @@ export default function SCMap() {
   const camera = useThree((state) => state.camera);
 
   const projection = useMemo(() => {
-    return d3
-      .geoMercator()
+    return geoMercator()
       .center(data.features[0].properties.centroid)
       .scale(80)
       .translate([0, 0]);

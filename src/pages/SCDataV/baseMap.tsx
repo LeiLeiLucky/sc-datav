@@ -1,7 +1,14 @@
 import { useMemo } from "react";
 import { Billboard, Line, Text, useTexture } from "@react-three/drei";
-import * as THREE from "three";
-import Shape from "./shape";
+import {
+  Box2,
+  DoubleSide,
+  RepeatWrapping,
+  Shape,
+  Vector2,
+  Vector3,
+} from "three";
+import ShapeBox from "./shape";
 import type { GeoProjection } from "d3-geo";
 import type { CityGeoJSON } from "@/pages/SCDataV/map";
 
@@ -14,19 +21,19 @@ const data = scMapData as CityGeoJSON;
 export default function BaseMap({ projection }: { projection: GeoProjection }) {
   const [texture1, texture2] = useTexture([textureMap, scNormalMap], (tex) =>
     tex.forEach((el) => {
-      el.wrapS = el.wrapT = THREE.RepeatWrapping;
+      el.wrapS = el.wrapT = RepeatWrapping;
       el.flipY = false;
     })
   );
 
   const { citys, regions, bbox } = useMemo(() => {
-    const citys: { name: string; center: THREE.Vector3 }[] = [];
-    const regions: THREE.Vector2[][] = [];
-    const bbox = new THREE.Box2();
+    const citys: { name: string; center: Vector3 }[] = [];
+    const regions: Vector2[][] = [];
+    const bbox = new Box2();
 
     const toV2 = (coord: number[]) => {
       const [x = 0, y = 0] = projection(coord as [number, number]) ?? [];
-      const projected = new THREE.Vector2(x, y);
+      const projected = new Vector2(x, y);
       bbox.expandByPoint(projected);
       return projected;
     };
@@ -37,11 +44,11 @@ export default function BaseMap({ projection }: { projection: GeoProjection }) {
         [];
       citys.push({
         name: feature.properties.name,
-        center: new THREE.Vector3(x, y),
+        center: new Vector3(x, y),
       });
 
       feature.geometry.coordinates.forEach((polygonSet) => {
-        const rings = polygonSet.reduce<THREE.Vector2[]>((pre, coordinates) => {
+        const rings = polygonSet.reduce<Vector2[]>((pre, coordinates) => {
           return [...pre, ...coordinates.map(toV2)];
         }, []);
 
@@ -60,9 +67,9 @@ export default function BaseMap({ projection }: { projection: GeoProjection }) {
     <group renderOrder={0} position={[0, 0, -0.01]}>
       {regions.map((reg, i) => (
         <group key={i}>
-          <Shape
+          <ShapeBox
             bbox={bbox}
-            args={[new THREE.Shape(reg)]}
+            args={[new Shape(reg)]}
             // onPointerOver={() => meshRef.current?.position.setZ(-0.3)}
             // onPointerOut={() => meshRef.current?.position.setZ(0)}
           >
@@ -71,9 +78,9 @@ export default function BaseMap({ projection }: { projection: GeoProjection }) {
               normalMap={texture2}
               metalness={0.2}
               roughness={0.5}
-              side={THREE.DoubleSide}
+              side={DoubleSide}
             />
-          </Shape>
+          </ShapeBox>
 
           <Line
             position={[0, 0, -0.01]}

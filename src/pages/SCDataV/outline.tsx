@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Extrude } from "@react-three/drei";
-import * as THREE from "three";
 import { useControls } from "leva";
+import { Color, Shape, Vector2, type IUniform } from "three";
 import { type GeoProjection } from "d3-geo";
 
 import scOutlineData from "@/assets/sc_outline.json";
@@ -15,16 +15,16 @@ export function OutLineAnimated() {
       value: "#90aba7",
       transient: false,
       onChange: (v) => {
-        uniformsRef.current.uRiseColor.value = new THREE.Color(v);
+        uniformsRef.current.uRiseColor.value = new Color(v);
       },
     },
   });
   const uniformsRef = useRef<{
-    uRiseTime: THREE.IUniform<number>;
-    uRiseColor: THREE.IUniform<THREE.Color>;
+    uRiseTime: IUniform<number>;
+    uRiseColor: IUniform<Color>;
   }>({
     uRiseTime: { value: 0.5 },
-    uRiseColor: { value: new THREE.Color(controls.background1) },
+    uRiseColor: { value: new Color(controls.background1) },
   });
 
   useFrame(() => {
@@ -102,10 +102,10 @@ export default function OutLine({ projection }: { projection: GeoProjection }) {
           <Extrude
             key={`${feature.properties.name}--${coordinatesIndex}`}
             args={[
-              new THREE.Shape(
+              new Shape(
                 coordinates.map((coord) => {
                   const [x, y] = projection(coord as [number, number]) ?? [];
-                  return new THREE.Vector2(x, y);
+                  return new Vector2(x, y);
                 })
               ),
               {

@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
 import { useControls } from "leva";
+import {
+  BufferGeometry,
+  CatmullRomCurve3,
+  Float32BufferAttribute,
+  Vector3,
+} from "three";
 import { type GeoProjection } from "d3-geo";
 
 import scOutlineData from "@/assets/sc_outline.json";
@@ -9,9 +14,9 @@ import scOutlineData from "@/assets/sc_outline.json";
 export default function FlyLine({ projection }: { projection: GeoProjection }) {
   const index = useRef(0); //取点索引位置
   const num = useRef(50); //从曲线上获取点数量
-  const geometry = useRef(new THREE.BufferGeometry());
-  const curve2 = useRef<THREE.CatmullRomCurve3>(null);
-  const points = useRef<THREE.Vector3[]>([]);
+  const geometry = useRef(new BufferGeometry());
+  const curve2 = useRef<CatmullRomCurve3>(null);
+  const points = useRef<Vector3[]>([]);
   const controls = useControls({
     lineColor: { label: "边缘流光颜色", value: "#ffffff" },
     animation: {
@@ -21,25 +26,25 @@ export default function FlyLine({ projection }: { projection: GeoProjection }) {
   });
 
   useEffect(() => {
-    let v3Arr: THREE.Vector3[] = [];
+    let v3Arr: Vector3[] = [];
 
     scOutlineData.features.map((line) => {
       line.geometry.coordinates[0].map((coords) => {
         v3Arr = coords.map((ll) => {
           const [x, y] = projection(ll as [number, number]) ?? [];
-          return new THREE.Vector3(x ?? 0, y ?? 0, 0.49);
+          return new Vector3(x ?? 0, y ?? 0, 0.49);
         });
       });
     });
 
-    points.current = new THREE.CatmullRomCurve3(v3Arr).getSpacedPoints(800);
+    points.current = new CatmullRomCurve3(v3Arr).getSpacedPoints(800);
     index.current = Math.floor((points.current.length - 35) * Math.random()); //取点索引位置随机
     const points2 = points.current.slice(
       index.current,
       index.current + num.current
     ); //从曲线上获取一段
 
-    curve2.current = new THREE.CatmullRomCurve3(points2);
+    curve2.current = new CatmullRomCurve3(points2);
     const newPoints2 = curve2.current.getSpacedPoints(200); //获取更多的点数
 
     geometry.current.setFromPoints(newPoints2);
@@ -50,8 +55,8 @@ export default function FlyLine({ projection }: { projection: GeoProjection }) {
       i < half ? i / half : 1 - (i - half) / half
     ); //attributes.percent的数据
 
-    geometry.current.attributes.percent = new THREE.BufferAttribute(
-      new Float32Array(percentArr),
+    geometry.current.attributes.percent = new Float32BufferAttribute(
+      percentArr,
       1
     );
   }, [projection]);

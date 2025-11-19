@@ -1,20 +1,20 @@
-import * as THREE from "three";
 import {
   forwardRef,
   useImperativeHandle,
   useLayoutEffect,
   useRef,
 } from "react";
+import { Box2, Float32BufferAttribute, Mesh, ShapeGeometry } from "three";
 import type { Args } from "@react-three/fiber";
 
 export type ShapeProps = Omit<React.JSX.IntrinsicElements["mesh"], "args"> & {
-  args?: Args<typeof THREE.ShapeGeometry>;
-  bbox: THREE.Box2;
+  args?: Args<typeof ShapeGeometry>;
+  bbox: Box2;
 };
 
-function Shape(props: ShapeProps, ref: React.ForwardedRef<THREE.Mesh>) {
+function Shape(props: ShapeProps, ref: React.ForwardedRef<Mesh>) {
   const { args, bbox, children, ...meshProps } = props;
-  const meshRef = useRef<THREE.Mesh>(null!);
+  const meshRef = useRef<Mesh>(null!);
 
   useImperativeHandle(ref, () => meshRef.current);
   useLayoutEffect(() => {
@@ -35,7 +35,7 @@ function Shape(props: ShapeProps, ref: React.ForwardedRef<THREE.Mesh>) {
       v = (y - bbox.min.y) / height;
       uv.push(u, v);
     }
-    geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+    geometry.setAttribute("uv", new Float32BufferAttribute(uv, 2));
   });
 
   return (
