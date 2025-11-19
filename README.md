@@ -1,6 +1,6 @@
 # 数据可视化大屏 (SC DataV)
 
-[https://knight-l.github.io/datav/](https://knight-l.github.io/datav/)
+[https://knight-l.github.io/sc-datav/](https://knight-l.github.io/sc-datav/)
 
 ![demo](./public/demo.png)
 
