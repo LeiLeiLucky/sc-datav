@@ -1,6 +1,6 @@
 import { useLayoutEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Grid, OrbitControls, Sparkles } from "@react-three/drei";
+import { Grid, OrbitControls, Stars } from "@react-three/drei";
 import styled from "styled-components";
 import autofit from "autofit.js";
 import { folder, Leva, useControls } from "leva";
@@ -31,10 +31,6 @@ const LevaBox = styled.div`
     right: 80px;
   }
 `;
-
-const scale = new Float32Array(
-  Array.from({ length: 50 }, () => 0.5 + Math.random() * 30)
-);
 
 export default function SichuanMap() {
   const controls = useControls({
@@ -76,12 +72,14 @@ export default function SichuanMap() {
             />
             <AmbientLight />
             <PointLight />
-            <Sparkles
-              count={scale.length}
-              size={scale}
-              position={[0, 2, 0]}
-              scale={[20, 5, 20]}
-              speed={0.5}
+            <Stars
+              radius={100}
+              depth={50}
+              count={5000}
+              factor={4}
+              saturation={0}
+              fade
+              speed={1}
             />
             <SCMap />
             <OrbitControls
