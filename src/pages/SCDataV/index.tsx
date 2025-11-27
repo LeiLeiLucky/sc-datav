@@ -58,15 +58,7 @@ export default function SichuanMap() {
             />
             <AmbientLight />
             <PointLight />
-            <Stars
-              fade
-              count={5000}
-              radius={100}
-              depth={50}
-              factor={8}
-              saturation={0}
-              speed={2}
-            />
+            <Stars fade count={1000} factor={8} saturation={0} speed={2} />
             <SCMap />
             <OrbitControls
               enablePan
