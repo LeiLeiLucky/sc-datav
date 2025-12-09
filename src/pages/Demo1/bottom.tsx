@@ -1,14 +1,19 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
-import { AdditiveBlending, Color, Mesh, RepeatWrapping } from "three";
+import {
+  Color,
+  Mesh,
+  NormalBlending,
+  RepeatWrapping,
+  SRGBColorSpace,
+} from "three";
 
 import rotationBorder1 from "@/assets/rotationBorder1.png";
 import rotationBorder2 from "@/assets/rotationBorder2.png";
-// import guangquan01 from "@/assets/guangquan01.png";
+import gaoguang1 from "@/assets/gaoguang1.png";
 import grid from "@/assets/grid.png";
 import gridBlack from "@/assets/gridBlack.png";
-import quan from "@/assets/quan.png";
 
 export default function Bottom() {
   const meshRef0 = useRef({
@@ -22,7 +27,7 @@ export default function Bottom() {
       value: 20.0,
     },
     uColor: {
-      value: new Color(0x079fe6),
+      value: new Color(0xea580c),
     },
     uDir: {
       value: 2.0, // 1.0-xy,2.0-xz
@@ -30,11 +35,11 @@ export default function Bottom() {
   });
   const meshRef1 = useRef<Mesh>(null!);
   const meshRef2 = useRef<Mesh>(null!);
-  //   const guangquanTex = useTexture(guangquan01, (tex) => {
-  //     tex.colorSpace = SRGBColorSpace;
-  //     tex.wrapS = tex.wrapT = RepeatWrapping;
-  //     tex.repeat.set(1, 1);
-  //   });
+  const gaoGuang1Tex = useTexture(gaoguang1, (tex) => {
+    tex.colorSpace = SRGBColorSpace;
+    tex.wrapS = tex.wrapT = RepeatWrapping;
+    tex.repeat.set(1, 1);
+  });
 
   const [gridTex, gridBlackTex] = useTexture([grid, gridBlack], (tex) =>
     tex.forEach((el) => {
@@ -43,8 +48,7 @@ export default function Bottom() {
     })
   );
 
-  const [quanTex, rotationBorder1Tex, rotationBorder2Tex] = useTexture([
-    quan,
+  const [rotationBorder1Tex, rotationBorder2Tex] = useTexture([
     rotationBorder1,
     rotationBorder2,
   ]);
@@ -59,29 +63,60 @@ export default function Bottom() {
   });
 
   return (
-    <group rotation={[-Math.PI / 2, 0, 0]}>
-      <mesh position={[0, 0, 0]}>
-        <planeGeometry args={[100, 100]} />
+    <group rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
+      <mesh>
+        <planeGeometry args={[20, 20]} />
         <meshBasicMaterial
           transparent
-          map={gridTex}
-          alphaMap={gridBlackTex}
-          color="#00ffff"
-          opacity={0.1}
-          depthWrite={false}
-          blending={AdditiveBlending}
+          blending={NormalBlending}
+          map={gaoGuang1Tex}
+          color="#fbdf88"
         />
       </mesh>
-      <mesh position={[0, 0, 0]}>
+      <mesh ref={meshRef1} position={[0, 0, 0.01]}>
+        <planeGeometry args={[16, 16]} />
+        <meshBasicMaterial
+          transparent
+          map={rotationBorder1Tex}
+          color="#fbdf88"
+          opacity={0.2}
+          depthWrite={false}
+          blending={NormalBlending}
+        />
+      </mesh>
+      <mesh ref={meshRef2} position={[0, 0, 0.01]}>
+        <planeGeometry args={[15, 15]} />
+        <meshBasicMaterial
+          transparent
+          map={rotationBorder2Tex}
+          color="#fbdf88"
+          opacity={0.4}
+          depthWrite={false}
+          blending={NormalBlending}
+        />
+      </mesh>
+      <mesh position={[0, 0, 0.01]}>
         <planeGeometry args={[100, 100]} />
         <meshBasicMaterial
           transparent
           map={gridTex}
           alphaMap={gridBlackTex}
-          color="#00ffff"
+          color="#fbdf88"
+          opacity={0.1}
+          depthWrite={false}
+          blending={NormalBlending}
+        />
+      </mesh>
+      <mesh position={[0, 0, 0.01]}>
+        <planeGeometry args={[100, 100]} />
+        <meshBasicMaterial
+          transparent
+          map={gridTex}
+          alphaMap={gridBlackTex}
+          color="#ea580c"
           opacity={0.5}
           depthWrite={false}
-          blending={AdditiveBlending}
+          blending={NormalBlending}
           onBeforeCompile={(shader) => {
             shader.uniforms = {
               ...shader.uniforms,
@@ -156,45 +191,6 @@ export default function Bottom() {
           `
             );
           }}
-        />
-      </mesh>
-      {/* <mesh position={[0, 0, 0]}>
-        <planeGeometry args={[60, 60]} />
-        <meshBasicMaterial
-          transparent
-          blending={AdditiveBlending}
-          map={guangquanTex}
-        />
-      </mesh> */}
-      <mesh position={[0, 0.01, 0]}>
-        <planeGeometry args={[40, 40]} />
-        <meshBasicMaterial
-          transparent
-          depthTest={false}
-          blending={AdditiveBlending}
-          map={quanTex}
-        />
-      </mesh>
-      <mesh ref={meshRef1} position={[0, 0.02, 0]}>
-        <planeGeometry args={[16, 16]} />
-        <meshBasicMaterial
-          transparent
-          map={rotationBorder1Tex}
-          color="#48afff"
-          opacity={0.2}
-          depthWrite={false}
-          blending={AdditiveBlending}
-        />
-      </mesh>
-      <mesh ref={meshRef2} position={[0, 0.02, 0]}>
-        <planeGeometry args={[15, 15]} />
-        <meshBasicMaterial
-          transparent
-          map={rotationBorder2Tex}
-          color="#48afff"
-          opacity={0.4}
-          depthWrite={false}
-          blending={AdditiveBlending}
         />
       </mesh>
     </group>

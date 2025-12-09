@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-const GradientBtn = styled.button`
+const GradientBtn = styled.button<{
+  $color?: string[];
+}>`
   position: relative;
   padding: 12px 24px;
   font-size: 18px;
@@ -24,7 +26,8 @@ const GradientBtn = styled.button`
     left: -50%;
     width: 200%;
     height: 200%;
-    background: conic-gradient(from 0deg, #aca891, #6e918c);
+    background: ${({ $color }) =>
+      `conic-gradient(from 0deg, ${$color?.join(", ") ?? "#aca891, #6e918c"})`};
     z-index: -2;
     filter: blur(10px);
     transform: rotate(0deg);
@@ -50,17 +53,20 @@ const GradientBtn = styled.button`
   }
 `;
 
-const GradientText = styled.div`
+const GradientText = styled.div<{
+  $color?: string[];
+}>`
   color: transparent;
-  background: conic-gradient(from 0deg, #aca891, #6e918c);
+  background: ${({ $color }) =>
+    `conic-gradient(from 0deg, ${$color?.join(", ") ?? "#aca891, #6e918c"})`};
   background-clip: text;
 `;
 
 export default function Button(props: typeof GradientBtn.defaultProps) {
-  const { children, ...args } = props ?? {};
+  const { children, $color, ...args } = props ?? {};
   return (
-    <GradientBtn {...args}>
-      <GradientText>{children}</GradientText>
+    <GradientBtn $color={$color} {...args}>
+      <GradientText $color={$color}>{children}</GradientText>
     </GradientBtn>
   );
 }

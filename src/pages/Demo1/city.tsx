@@ -1,6 +1,6 @@
+import { useMemo, useRef, useState } from "react";
 import { useCursor } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef, useState } from "react";
 import {
   DoubleSide,
   Shape,
@@ -12,7 +12,11 @@ import {
   type Vector2,
 } from "three";
 import ShapeMesh from "./shape";
-import InfoPoint from "./infoPoint";
+import CityTooltip from "./cityTooltip";
+import CityBar from "./cityBar";
+import Label from "./label";
+
+import cityData from "./cityData";
 
 export interface CityProps
   extends Pick<MeshStandardMaterialProperties, "map" | "normalMap"> {
@@ -33,15 +37,12 @@ export default function City(props: CityProps) {
   const [hovered, setHovered] = useState(false);
 
   const shape = useMemo(
-    () =>
-      data.points instanceof Array
-        ? data.points.map((e) => new Shape(e))
-        : new Shape(data.points),
+    () => data.points.map((e) => new Shape(e)),
     [data.points]
   );
 
   useFrame(() => {
-    groupRef.current.scale.lerp(vector3.current.setZ(hovered ? 2 : 1), 0.1);
+    groupRef.current.scale.lerp(vector3.current.setZ(hovered ? 1.5 : 1), 0.1);
   });
 
   useCursor(hovered);
@@ -64,16 +65,41 @@ export default function City(props: CityProps) {
           args={[shape, { depth, steps: 1, bevelEnabled: false }]}
         />
         <meshStandardMaterial
+          transparent
+          opacity={0}
           metalness={0.2}
           roughness={0.5}
           side={DoubleSide}
         />
       </mesh>
-      <lineSegments position={[0, 0.01, depth + 0.02]} raycast={() => {}}>
+      <lineSegments position={[0, 0.01, depth + 0.02]} raycast={() => null}>
         <edgesGeometry args={[new ShapeGeometry(shape)]} />
-        <lineBasicMaterial transparent color="#ffffff" />
+        <lineBasicMaterial transparent opacity={0} color="#ffffff" />
       </lineSegments>
-      <InfoPoint color="#ffffff" position={data.cityId} />
+
+      <CityBar
+        position={data.cityId}
+        value={cityData[data.city as keyof typeof cityData]?.population ?? 0}>
+        {(barHeight) => (
+          <>
+            <Label
+              center
+              position={[0, 0, barHeight + 0.2]}
+              distanceFactor={10}
+              zIndexRange={[100 - 1000]}>
+              {data.city}
+            </Label>
+            <CityTooltip
+              data={{
+                city: data.city,
+                ...cityData[data.city as keyof typeof cityData],
+              }}
+              position={[0, 0, barHeight + 2]}
+              visible={hovered}
+            />
+          </>
+        )}
+      </CityBar>
     </group>
   );
 }

@@ -1,11 +1,16 @@
+import { Suspense } from "react";
 import styled from "styled-components";
-import { OrbitControls, Stats, ContactShadows } from "@react-three/drei";
+import { OrbitControls, ContactShadows, Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { CityGeoJSON } from "@/pages/SCDataV/map";
+import Content from "./content";
+import Lights from "./lights";
 import Base from "./base";
 
 import scMapData from "@/assets/sc.json";
 import scOutlineData from "@/assets/sc_outline.json";
+import Sky from "./sky";
+import Bottom from "./bottom";
 
 const mapData = scMapData as CityGeoJSON,
   outlineData = scOutlineData as CityGeoJSON;
@@ -26,23 +31,21 @@ const CanvasWrapper = styled.div`
 export default function Map() {
   return (
     <Wrapper>
-      <Stats />
       <CanvasWrapper>
         <Canvas
           flat
           shadows
-          camera={{ position: [-5, 10, 10], fov: 50 }}
+          camera={{ position: [0, 10, 20], fov: 50 }}
           dpr={[1, 2]}>
           <color attach="background" args={["#fff5e8"]} />
-          <ambientLight intensity={2} />
-          <pointLight
-            intensity={3000}
-            position={[-5, 20, 10]}
-            distance={50}
-            color="#fff5e8"
-          />
+          <Lights />
+          <Sky />
 
-          <Base data={mapData} outlineData={outlineData} />
+          <Suspense fallback={null}>
+            <Base data={mapData} outlineData={outlineData} />
+          </Suspense>
+
+          <Bottom />
 
           <ContactShadows
             opacity={0.2}
@@ -55,16 +58,18 @@ export default function Map() {
           />
 
           <OrbitControls
-            // autoRotate
-            // autoRotateSpeed={0.05}
-            // enableZoom={false}
-            // makeDefault
-            // minPolarAngle={Math.PI / 2}
-            // maxPolarAngle={Math.PI / 2}
+            enablePan
+            enableZoom
+            enableRotate
             zoomSpeed={0.3}
+            minDistance={10}
+            maxDistance={20}
+            maxPolarAngle={1.5}
           />
         </Canvas>
       </CanvasWrapper>
+      <Content />
+      <Loader />
     </Wrapper>
   );
 }

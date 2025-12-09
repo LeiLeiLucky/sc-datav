@@ -112,6 +112,7 @@ export interface HeaderProps {
     flex?: number;
     render?: (index: number) => React.ReactNode;
   }[];
+  style?: React.CSSProperties;
 }
 
 export interface BodyRowProps<T> extends HeaderProps {
@@ -124,13 +125,17 @@ export interface SeamVirtualScroll<T> extends HeaderProps {
   data?: T[];
   speed?: number;
   expendCount?: number;
+  styles?: {
+    header?: React.CSSProperties;
+    body?: React.CSSProperties;
+  };
 }
 
 const Header: FC<HeaderProps> = (props) => {
-  const { column = [] } = props;
+  const { column = [], style } = props;
 
   return (
-    <HeaderWrapper>
+    <HeaderWrapper style={style}>
       {column.map((el, idx) => (
         <HeaderItem $align={el.align} $flex={el.flex} key={idx}>
           {el?.title}
@@ -159,7 +164,13 @@ const BodyRow: FC<BodyRowProps<Record<string, React.ReactNode>>> = (props) => {
 const Index: FC<SeamVirtualScroll<Record<string, React.ReactNode>>> = (
   props
 ) => {
-  const { speed = 3000, rowHeight = 48, column = [], data = [] } = props;
+  const {
+    speed = 3000,
+    rowHeight = 48,
+    column = [],
+    data = [],
+    styles,
+  } = props;
   const lastTime = useRef<number>(0);
   const warper = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -214,10 +225,13 @@ const Index: FC<SeamVirtualScroll<Record<string, React.ReactNode>>> = (
     <Wrapper
       onMouseEnter={() => hoverHandler(false)}
       onMouseLeave={() => hoverHandler(true)}>
-      <Header column={column} />
+      <Header column={column} style={styles?.header} />
 
       <Table ref={warper}>
-        <TableContent ref={contentRef} onTransitionEnd={onTransitionEnd}>
+        <TableContent
+          ref={contentRef}
+          style={styles?.body}
+          onTransitionEnd={onTransitionEnd}>
           {renderList?.map((item, idx) => (
             <BodyRow
               key={idx + activeIndex}

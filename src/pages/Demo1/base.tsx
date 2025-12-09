@@ -1,6 +1,15 @@
-import { useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
+import { useThree } from "@react-three/fiber";
 import { Center, useTexture } from "@react-three/drei";
-import { Box2, RepeatWrapping, Vector2, type Group } from "three";
+import { gsap } from "gsap";
+import {
+  Box2,
+  LineSegments,
+  Mesh,
+  RepeatWrapping,
+  Vector2,
+  type Group,
+} from "three";
 import { geoMercator } from "d3-geo";
 import type { CityGeoJSON } from "@/pages/SCDataV/map";
 import City, { type CityProps } from "./city";
@@ -17,6 +26,7 @@ export interface BaseProps {
 export default function Base(props: BaseProps) {
   const { data, depth = 1 } = props;
   const groupRef = useRef<Group>(null!);
+  const camera = useThree((state) => state.camera);
 
   const [texture1, texture2] = useTexture([map, normalMap], (tex) =>
     tex.forEach((el) => {
@@ -67,12 +77,54 @@ export default function Base(props: BaseProps) {
     };
   }, [projection, data]);
 
+  useLayoutEffect(() => {
+    if (!groupRef.current) return;
+    const tl = gsap.timeline({
+      paused: true,
+    });
+
+    tl.add(
+      gsap.to(camera.position, {
+        x: 5,
+        y: 10,
+        z: 10,
+        duration: 2.5,
+        ease: "circ.out",
+      })
+    );
+    tl.add(
+      tl.to(
+        groupRef.current.scale,
+        { x: 0.5, y: 0.5, z: 0.5, duration: 1, ease: "circ.out" },
+        2.5
+      )
+    );
+    groupRef.current.traverse((obj) => {
+      if (obj instanceof Mesh || obj instanceof LineSegments) {
+        tl.add(
+          tl.to(
+            obj.material,
+            { opacity: 1, duration: 1, ease: "circ.out" },
+            2.5
+          ),
+          3
+        );
+      }
+    });
+
+    tl.play();
+
+    return () => {
+      tl.kill();
+    };
+  }, [camera]);
+
   return (
     <Center top>
       <group
         ref={groupRef}
         rotation={[-Math.PI / 2, 0, 0]}
-        scale={0.4}
+        scale={[0.5, 0.5, 0.01]}
         position={[0, 0, 0]}>
         {regions.map((region, idx) => (
           <City
