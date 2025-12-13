@@ -28,10 +28,8 @@ export default function Index() {
           opacity={0.5}
           scale={300}
           blur={0.5}
-          far={10}
           resolution={256}
           color="#000000"
-          position={[0, -0.1, 0]}
         />
 
         <OrbitControls
