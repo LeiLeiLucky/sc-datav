@@ -11,7 +11,7 @@ import type { GeoProjection } from "d3-geo";
 import type { ThreeElements } from "@react-three/fiber";
 //@ts-ignore
 import heatmapJs from "keli-heatmap.js";
-import { useConfigStore } from "./stores";
+import { useConfigStore } from "../stores";
 
 import data from "@/assets/heatmapData.json";
 

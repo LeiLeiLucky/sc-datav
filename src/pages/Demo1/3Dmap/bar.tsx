@@ -10,8 +10,8 @@ import {
   SRGBColorSpace,
   type Mesh,
 } from "three";
-import { useConfigStore } from "./stores";
-import loadTexture from "./helpers/loadTexture";
+import { useConfigStore } from "../stores";
+import loadTexture from "../helpers/loadTexture";
 
 import guangquan01 from "@/assets/guangquan01.png";
 import huiguang from "@/assets/huiguang.png";

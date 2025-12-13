@@ -31,7 +31,7 @@ const DataItem = styled.div`
   }
 `;
 
-interface CityTooltipProps {
+interface TooltipProps {
   ref?: Ref<{ open: () => void; close: () => void }>;
   data: {
     city: string;
@@ -43,7 +43,7 @@ interface CityTooltipProps {
   visible: boolean;
 }
 
-export default function CityTooltip(props: CityTooltipProps) {
+export default function Tooltip(props: TooltipProps) {
   const { ref, data, position } = props;
   const [visible, setVisible] = useState(false);
 

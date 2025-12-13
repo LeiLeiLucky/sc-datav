@@ -11,11 +11,11 @@ import {
   type Vector2,
 } from "three";
 import ShapeMesh from "./shape";
-import CityTooltip from "./cityTooltip";
+import Tooltip from "./tooltip";
 import Bar from "./bar";
 import Label from "./label";
 
-import cityData from "./cityData";
+import cityData from "../cityData";
 
 export interface CityProps
   extends Pick<MeshStandardMaterialProperties, "map" | "normalMap"> {
@@ -91,7 +91,7 @@ export default function City(props: CityProps) {
               zIndexRange={[100 - 1000]}>
               {data.city}
             </Label>
-            <CityTooltip
+            <Tooltip
               ref={tooltipRef}
               data={{
                 city: data.city,

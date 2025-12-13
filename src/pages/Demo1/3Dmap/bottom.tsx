@@ -7,8 +7,8 @@ import {
   RepeatWrapping,
   SRGBColorSpace,
 } from "three";
-import { useConfigStore } from "./stores";
-import loadTexture from "./helpers/loadTexture";
+import { useConfigStore } from "../stores";
+import loadTexture from "../helpers/loadTexture";
 
 import rotationBorder1 from "@/assets/rotationBorder1.png";
 import rotationBorder2 from "@/assets/rotationBorder2.png";

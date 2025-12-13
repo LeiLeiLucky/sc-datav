@@ -25,10 +25,10 @@ import {
   useFrame,
   type ThreeElements,
 } from "@react-three/fiber";
-import loadTexture from "./helpers/loadTexture";
+import { useConfigStore } from "../stores";
+import loadTexture from "../helpers/loadTexture";
 
 import cloudUrl from "@/assets/cloud.png";
-import { useConfigStore } from "./stores";
 
 const cloudTexture = loadTexture(cloudUrl);
 

@@ -12,7 +12,7 @@ import {
 import { geoMercator } from "d3-geo";
 import type { CityGeoJSON } from "@/types/map";
 import City, { type CityProps } from "./city";
-import loadTexture from "./helpers/loadTexture";
+import loadTexture from "../helpers/loadTexture";
 
 import map from "@/assets/sc_map.png";
 import normalMap from "@/assets/sc_normal_map.png";
