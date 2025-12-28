@@ -7,6 +7,7 @@ import {
   Stage,
   Stats,
   useEnvironment,
+  Loader,
 } from "@react-three/drei";
 import styled from "styled-components";
 import { Color } from "three";
@@ -35,60 +36,64 @@ useEnvironment.preload({ files: "/sc-datav/hdr/venice_sunset_1k.hdr" });
 
 export default function Demo2() {
   return (
-    <Wrapper>
-      <CanvasWrapper>
-        <Canvas
-          shadows
-          dpr={[1, 2]}
-          camera={{ position: [-10, 5, 12], fov: 25 }}>
-          <Suspense fallback={null}>
-            <Stage
-              intensity={0.5}
-              shadows={{
-                type: "accumulative",
-                bias: -0.001,
-                intensity: Math.PI,
-              }}
-              center={{ disableZ: true }}
-              adjustCamera={false}>
-              <Model />
-            </Stage>
-          </Suspense>
+    <>
+      <Loader />
 
-          <Grid
-            infiniteGrid
-            renderOrder={-1}
-            position-y={-1.4}
-            cellSize={0.6}
-            cellThickness={0.6}
-            sectionSize={3.3}
-            sectionThickness={1.5}
-            sectionColor={new Color(0.5, 0.5, 10)}
-            fadeDistance={30}
-          />
+      <Wrapper>
+        <CanvasWrapper>
+          <Canvas
+            shadows
+            dpr={[1, 2]}
+            camera={{ position: [-10, 5, 12], fov: 25 }}>
+            <Suspense fallback={null}>
+              <Stage
+                intensity={0.5}
+                shadows={{
+                  type: "accumulative",
+                  bias: -0.001,
+                  intensity: Math.PI,
+                }}
+                center={{ disableZ: true }}
+                adjustCamera={false}>
+                <Model />
+              </Stage>
+            </Suspense>
 
-          <EffectComposer>
-            <Bloom disableNormalPass luminanceThreshold={2} mipmapBlur />
-            <ToneMapping />
-          </EffectComposer>
+            <Grid
+              infiniteGrid
+              renderOrder={-1}
+              position-y={-1.4}
+              cellSize={0.6}
+              cellThickness={0.6}
+              sectionSize={3.3}
+              sectionThickness={1.5}
+              sectionColor={new Color(0.5, 0.5, 10)}
+              fadeDistance={30}
+            />
 
-          <Environment
-            background
-            blur={0.8}
-            files="/sc-datav/hdr/venice_sunset_1k.hdr"
-          />
+            <EffectComposer>
+              <Bloom disableNormalPass luminanceThreshold={2} mipmapBlur />
+              <ToneMapping />
+            </EffectComposer>
 
-          <OrbitControls
-            autoRotate
-            autoRotateSpeed={0.05}
-            enableZoom={false}
-            makeDefault
-            minPolarAngle={Math.PI / 2}
-            maxPolarAngle={Math.PI / 2}
-          />
-        </Canvas>
-      </CanvasWrapper>
-      <Stats />
-    </Wrapper>
+            <Environment
+              background
+              blur={0.8}
+              files="/sc-datav/hdr/venice_sunset_1k.hdr"
+            />
+
+            <OrbitControls
+              autoRotate
+              autoRotateSpeed={0.05}
+              enableZoom={false}
+              makeDefault
+              minPolarAngle={Math.PI / 2}
+              maxPolarAngle={Math.PI / 2}
+            />
+          </Canvas>
+        </CanvasWrapper>
+        <Stats />
+      </Wrapper>
+    </>
   );
 }

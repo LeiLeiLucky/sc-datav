@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import styled from "styled-components";
-import { OrbitControls, Loader } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import Lights from "./lights";
 import Mirror from "./mirror";
@@ -24,33 +24,30 @@ const CanvasWrapper = styled.div`
 
 export default function Map() {
   return (
-    <>
-      <CanvasWrapper>
-        <Canvas
-          camera={{
-            fov: 70,
-            position: [3, 20, 10],
-          }}
-          dpr={[1, 2]}>
-          <fog attach="fog" args={["#000000", 10, 30]} />
-          <color attach="background" args={["#000000"]} />
-          <Lights />
-          <Suspense fallback={null}>
-            <Base data={mapData} outlineData={outlineData} />
-          </Suspense>
-          <Bottom />
-          <Mirror />
-          <BeamLight />
-          <OrbitControls
-            enableDamping
-            zoomSpeed={0.3}
-            minDistance={8}
-            maxDistance={20}
-            maxPolarAngle={1.5}
-          />
-        </Canvas>
-      </CanvasWrapper>
-      <Loader />
-    </>
+    <CanvasWrapper>
+      <Canvas
+        camera={{
+          fov: 70,
+          position: [3, 20, 10],
+        }}
+        dpr={[1, 2]}>
+        <fog attach="fog" args={["#000000", 10, 30]} />
+        <color attach="background" args={["#000000"]} />
+        <Lights />
+        <Suspense fallback={null}>
+          <Base data={mapData} outlineData={outlineData} />
+        </Suspense>
+        <Bottom />
+        <Mirror />
+        <BeamLight />
+        <OrbitControls
+          enableDamping
+          zoomSpeed={0.3}
+          minDistance={8}
+          maxDistance={20}
+          maxPolarAngle={1.5}
+        />
+      </Canvas>
+    </CanvasWrapper>
   );
 }
