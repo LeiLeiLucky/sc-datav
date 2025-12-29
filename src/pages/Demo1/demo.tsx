@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import styled from "styled-components";
+import { useConfigStore } from "./stores";
 import Panel from "./panel";
 import Map from "./map";
 
@@ -9,6 +11,10 @@ const Wrapper = styled.div`
 `;
 
 export default function Index() {
+  useEffect(() => {
+    return useConfigStore.getState().reset();
+  }, []);
+
   return (
     <Wrapper>
       <Map />

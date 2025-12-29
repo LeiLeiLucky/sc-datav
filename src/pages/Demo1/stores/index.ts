@@ -9,10 +9,11 @@ interface ConfigStore {
   heat: boolean;
   mode: boolean;
   toggle: (key: keyof Omit<ConfigStore, "toggle">) => void;
+  reset: () => void;
 }
 
 export const useConfigStore = create<ConfigStore>()(
-  subscribeWithSelector((set) => ({
+  subscribeWithSelector((set, _, store) => ({
     mapPlayComplete: false,
     cloud: true,
     bar: true,
@@ -20,5 +21,6 @@ export const useConfigStore = create<ConfigStore>()(
     heat: true,
     mode: true,
     toggle: (key) => set((s) => ({ [key]: !s[key] })),
+    reset: () => set(store.getInitialState()),
   }))
 );
