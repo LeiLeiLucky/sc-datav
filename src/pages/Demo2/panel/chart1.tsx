@@ -6,20 +6,23 @@ import { PieChart, type PieSeriesOption } from "echarts/charts";
 import type { ComposeOption } from "echarts/core";
 import {
   GraphicComponent,
+  GridComponent,
   TooltipComponent,
+  type GridComponentOption,
   type LegendComponentOption,
   type TooltipComponentOption,
 } from "echarts/components";
 import { LegacyGridContainLabel } from "echarts/features";
 import type { BarSeriesOption, PictorialBarSeriesOption } from "echarts";
 
-type PieOption = ComposeOption<
+type BarOption = ComposeOption<
   | PictorialBarSeriesOption
   | BarSeriesOption
-  | PieSeriesOption
-  | TooltipComponentOption
   | LegendComponentOption
+  | GridComponentOption
 >;
+
+type PieOption = ComposeOption<PieSeriesOption | TooltipComponentOption>;
 
 const color = ["#bdcfff", "#b693e2", "#91cfd4", "#3061DB"];
 
@@ -71,7 +74,7 @@ const Wrapper = styled.div`
   height: 100%;
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  grid-template-rows: 24px repeat(1, minmax(0, 1fr));
+  grid-template-rows: 10% 35% repeat(1, minmax(0, 1fr));
 `;
 
 const Statistics = styled.div`
@@ -112,21 +115,15 @@ export default function Chart1() {
           options={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
         />
       </Statistics>
-      <Chart<PieOption>
+      <Chart<BarOption>
         use={[
           PictorialBarChart,
           BarChart,
-          PieChart,
+          GridComponent,
           LegacyGridContainLabel,
-          TooltipComponent,
-          GraphicComponent,
         ]}
         option={{
-          color: color[0],
-          grid: [
-            { containLabel: true, top: 16, height: "30%" },
-            { top: "30%", height: "70%" },
-          ],
+          grid: { containLabel: true, top: 16, left: 0, bottom: 0 },
           xAxis: {
             splitLine: {
               show: false,
@@ -157,24 +154,6 @@ export default function Chart1() {
               color: "#fff",
             },
             data: yName,
-          },
-          tooltip: {
-            show: false,
-          },
-          graphic: {
-            elements: [
-              {
-                type: "image",
-                style: {
-                  image:
-                    "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PHBhdGggZD0iTTAgMGgxMDI0djEwMjRIMFYweiIgZmlsbD0iI0ZGRiIgZmlsbC1vcGFjaXR5PSIuMDEiLz48cGF0aCBkPSJNMTkyIDIzMC43ODRMNTQ0LjE5MiAxMjggODk2IDIzMC43ODR2MjEwLjc1MmE1MTQuNjI0IDUxNC42MjQgMCAwIDEtMzUyIDQ4OC4yNTYgNTE0LjY4OCA1MTQuNjg4IDAgMCAxLTM1Mi00ODguMzJWMjMwLjc4NHoiIGZpbGw9IiNiZGNmZmYiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guc2VhcmNoX2luZGV4LjAuaTE1Ljc1NzUzYTgxM2xOelgxIiBjbGFzcz0ic2VsZWN0ZWQiLz48cGF0aCBkPSJNMTI4IDQ0MS40NzJWMjMwLjc4NHEwLTUuMTIuODMyLTEwLjI0dDIuNDMyLTkuOTg0cTEuNjY0LTQuOTI4IDQuMDMyLTkuNDcyIDIuNDMyLTQuNjA4IDUuNTA0LTguNzA0IDMuMDcyLTQuMTYgNi43ODQtNy42OCAzLjcxMi0zLjU4NCA4LTYuNTI4IDQuMjI0LTIuOTQ0IDguODk2LTUuMTIgNC42MDgtMi4yNCA5LjYtMy43MTJMNTI2LjIwOCA2Ni41NnExNy45Mi01LjI0OCAzNS45MDQgMEw5MTMuOTIgMTY5LjM0NHE0Ljk5MiAxLjQ3MiA5LjYgMy42NDggNC42NzIgMi4yNCA4Ljk2IDUuMTIgNC4yMjQgMy4wMDggNy45MzYgNi41OTIgMy43MTIgMy41ODQgNi43ODQgNy42OCAzLjA3MiA0LjE2IDUuNTA0IDguNzA0IDIuMzY4IDQuNTQ0IDQuMDMyIDkuNDcyIDEuNiA0Ljg2NCAyLjQzMiA5Ljk4NC44MzIgNS4xMi44MzIgMTAuMjR2MjEwLjc1MnEwIDE4Ni44OC0xMDkuMjQ4IDMzOC4zNjgtMTA5LjI0OCAxNTEuNTUyLTI4Ni40NjQgMjEwLjU2LTkuODU2IDMuMzI4LTIwLjIyNCAzLjMyOHQtMjAuMjI0LTMuMjY0cS0xNzcuMjgtNTkuMDcyLTI4Ni41OTItMjEwLjYyNFExMjggNjI4LjI4OCAxMjggNDQxLjQ3MnptMTI4IDBxMCAxNDUuNTM2IDg1LjEyIDI2My41NTIgODUuMTIgMTE4LjA4IDIyMy4xNjggMTY0LjAzMmwtMjAuMjI0IDYwLjczNi0yMC4yMjQtNjAuNzM2cTEzNy45ODQtNDUuOTUyIDIyMy4xMDQtMTYzLjk2OFE4MzIgNTg3LjAwOCA4MzIgNDQxLjUzNlYyMzAuNzg0aDY0bC0xNy45MiA2MS40NEw1MjYuMjA4IDE4OS40NGwxNy45Mi02MS40NCAxNy45MiA2MS40NEwyMDkuOTIgMjkyLjIyNCAxOTIgMjMwLjc4NGg2NHYyMTAuNjg4eiIgZmlsbD0iI2JkY2ZmZiIgZGF0YS1zcG0tYW5jaG9yLWlkPSJhMzEzeC5zZWFyY2hfaW5kZXguMC5pMTQuNzU3NTNhODEzbE56WDEiLz48cGF0aCBkPSJNNDgzLjUyIDM1Ny41NjhoMTc2TDU1MiA0OTQuNTI4aDE0Ni42MjRMNDY0IDc0OC42NzJsNDguODk2LTE4NS43OTJoLTEzNi45Nkw0ODMuNTIgMzU3LjUwNHoiIGZpbGw9IiNGRkYiLz48L3N2Zz4=",
-                  width: 36,
-                  height: 36,
-                },
-                left: "center",
-                top: "60%",
-              },
-            ],
           },
           series: [
             {
@@ -237,10 +216,36 @@ export default function Chart1() {
               z: 2,
               animationEasing: "elasticOut",
             },
+          ],
+        }}
+      />
+      <Chart<PieOption>
+        use={[PieChart, TooltipComponent, GraphicComponent]}
+        option={{
+          color: color[0],
+          tooltip: {
+            show: false,
+          },
+          graphic: {
+            elements: [
+              {
+                type: "image",
+                style: {
+                  image:
+                    "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PHBhdGggZD0iTTAgMGgxMDI0djEwMjRIMFYweiIgZmlsbD0iI0ZGRiIgZmlsbC1vcGFjaXR5PSIuMDEiLz48cGF0aCBkPSJNMTkyIDIzMC43ODRMNTQ0LjE5MiAxMjggODk2IDIzMC43ODR2MjEwLjc1MmE1MTQuNjI0IDUxNC42MjQgMCAwIDEtMzUyIDQ4OC4yNTYgNTE0LjY4OCA1MTQuNjg4IDAgMCAxLTM1Mi00ODguMzJWMjMwLjc4NHoiIGZpbGw9IiNiZGNmZmYiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guc2VhcmNoX2luZGV4LjAuaTE1Ljc1NzUzYTgxM2xOelgxIiBjbGFzcz0ic2VsZWN0ZWQiLz48cGF0aCBkPSJNMTI4IDQ0MS40NzJWMjMwLjc4NHEwLTUuMTIuODMyLTEwLjI0dDIuNDMyLTkuOTg0cTEuNjY0LTQuOTI4IDQuMDMyLTkuNDcyIDIuNDMyLTQuNjA4IDUuNTA0LTguNzA0IDMuMDcyLTQuMTYgNi43ODQtNy42OCAzLjcxMi0zLjU4NCA4LTYuNTI4IDQuMjI0LTIuOTQ0IDguODk2LTUuMTIgNC42MDgtMi4yNCA5LjYtMy43MTJMNTI2LjIwOCA2Ni41NnExNy45Mi01LjI0OCAzNS45MDQgMEw5MTMuOTIgMTY5LjM0NHE0Ljk5MiAxLjQ3MiA5LjYgMy42NDggNC42NzIgMi4yNCA4Ljk2IDUuMTIgNC4yMjQgMy4wMDggNy45MzYgNi41OTIgMy43MTIgMy41ODQgNi43ODQgNy42OCAzLjA3MiA0LjE2IDUuNTA0IDguNzA0IDIuMzY4IDQuNTQ0IDQuMDMyIDkuNDcyIDEuNiA0Ljg2NCAyLjQzMiA5Ljk4NC44MzIgNS4xMi44MzIgMTAuMjR2MjEwLjc1MnEwIDE4Ni44OC0xMDkuMjQ4IDMzOC4zNjgtMTA5LjI0OCAxNTEuNTUyLTI4Ni40NjQgMjEwLjU2LTkuODU2IDMuMzI4LTIwLjIyNCAzLjMyOHQtMjAuMjI0LTMuMjY0cS0xNzcuMjgtNTkuMDcyLTI4Ni41OTItMjEwLjYyNFExMjggNjI4LjI4OCAxMjggNDQxLjQ3MnptMTI4IDBxMCAxNDUuNTM2IDg1LjEyIDI2My41NTIgODUuMTIgMTE4LjA4IDIyMy4xNjggMTY0LjAzMmwtMjAuMjI0IDYwLjczNi0yMC4yMjQtNjAuNzM2cTEzNy45ODQtNDUuOTUyIDIyMy4xMDQtMTYzLjk2OFE4MzIgNTg3LjAwOCA4MzIgNDQxLjUzNlYyMzAuNzg0aDY0bC0xNy45MiA2MS40NEw1MjYuMjA4IDE4OS40NGwxNy45Mi02MS40NCAxNy45MiA2MS40NEwyMDkuOTIgMjkyLjIyNCAxOTIgMjMwLjc4NGg2NHYyMTAuNjg4eiIgZmlsbD0iI2JkY2ZmZiIgZGF0YS1zcG0tYW5jaG9yLWlkPSJhMzEzeC5zZWFyY2hfaW5kZXguMC5pMTQuNzU3NTNhODEzbE56WDEiLz48cGF0aCBkPSJNNDgzLjUyIDM1Ny41NjhoMTc2TDU1MiA0OTQuNTI4aDE0Ni42MjRMNDY0IDc0OC42NzJsNDguODk2LTE4NS43OTJoLTEzNi45Nkw0ODMuNTIgMzU3LjUwNHoiIGZpbGw9IiNGRkYiLz48L3N2Zz4=",
+                  width: 36,
+                  height: 36,
+                },
+                left: "center",
+                top: "middle",
+              },
+            ],
+          },
+          series: [
             {
               name: "",
               type: "pie",
-              center: ["50%", "70%"],
+              center: ["50%", "50%"],
               radius: [35, 45],
               label: {
                 alignTo: "edge",
