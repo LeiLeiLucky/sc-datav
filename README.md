@@ -1,4 +1,32 @@
-# 数据可视化大屏
+<div align="center">
+<img src="./public/logo.svg" width="120" alt="SC-Datav Logo" />
+  <h1>数据可视化大屏</h1>
+  <p>基于 Three.js + React 19 + ECharts 的 3D 地图可视化大屏项目</p>
+  <p>包含 3D 地图渲染、轮廓飞线、侧边扫光、多图表联动等丰富功能</p>
+
+  <p>
+    <a href="https://github.com/knight-L/sc-datav/pulls">
+      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome">
+    </a>
+    <a href="https://react.dev/">
+      <img src="https://img.shields.io/badge/React-19.1.1-61dafb?style=flat-square&logo=react" alt="React">
+    </a>
+    <a href="https://threejs.org/">
+      <img src="https://img.shields.io/badge/Three.js-0.181.2-black?style=flat-square&logo=three.js" alt="Three.js">
+    </a>
+    <a href="https://www.typescriptlang.org/">
+      <img src="https://img.shields.io/badge/TypeScript-5.9.3-3178c6?style=flat-square&logo=typescript" alt="TypeScript">
+    </a>
+    <a href="https://github.com/knight-L/datav/stargazers">
+      <img src="https://img.shields.io/github/stars/knight-L/datav?style=flat-square" alt="GitHub stars">
+    </a>
+    <a href="https://github.com/knight-L/datav/network/members">
+      <img src="https://img.shields.io/github/forks/knight-L/datav?style=flat-square" alt="GitHub forks">
+    </a>
+  </p>
+</div>
+
+## 预览
 
 | [预览地址](https://knight-l.github.io/sc-datav/#/demo0) | [预览地址](https://knight-l.github.io/sc-datav/#/demo1) |
 | ------------------------------------------------------- | ------------------------------------------------------- |
