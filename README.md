@@ -1,5 +1,4 @@
 <div align="center">
-<img src="./public/logo.svg" width="120" alt="SC-Datav Logo" />
   <h1>数据可视化大屏</h1>
   <p>基于 Three.js + React 19 + ECharts 的 3D 地图可视化大屏项目</p>
   <p>包含 3D 地图渲染、轮廓飞线、侧边扫光、多图表联动等丰富功能</p>
